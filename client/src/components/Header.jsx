@@ -33,7 +33,7 @@ export default function Header() {
                     <FaMoon />
                 </Button>
                 <Link to='/sign-in'>
-                    <Button gradientDuoTone='purpleToBlue'>Sign In</Button>
+                    <Button className='bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300' >Sign In</Button>
                 </Link>
                 <Navbar.Toggle />
             </div>
@@ -63,6 +63,6 @@ export default function Header() {
                     Projects
                 </Navbar.Link>
             </Navbar.Collapse>
-        </Navbar>
+        </Navbar >
     );
 }
