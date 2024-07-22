@@ -8,6 +8,8 @@ import Projects from './pages/Projects';
 import SignUp from './pages/SignUp';
 import Header from './components/Header';
 import 'flowbite/dist/flowbite.css';
+import FooterCom from './components/Footer'
+
 
 
 
@@ -24,7 +26,8 @@ export default function App() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/projects' element={<Projects />} />
         </Routes>
+        <FooterCom />
       </BrowserRouter>
-    </div>
+    </div >
   )
 }
