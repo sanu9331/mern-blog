@@ -3,9 +3,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function Header() {
     const path = useLocation().pathname;
+    const { currentUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -29,6 +31,12 @@ export default function Header() {
         setMenuOpen(!menuOpen);
     };
 
+    const handleSignOut = () => {
+        // Handle sign out logic
+        // dispatch(signOutAction());
+        navigate('/sign-in');
+    };
+
     return (
         <nav className="bg-white border-gray-200 dark:bg-gray-900">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -45,54 +53,52 @@ export default function Header() {
                     </button>
                     <div className="relative hidden md:block me-4">
                         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                            </svg>
+                            <AiOutlineSearch className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                             <span className="sr-only">Search icon</span>
                         </div>
                         <input type="text" id="search-navbar" value={searchTerm} onChange={handleSearchChange} className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..." />
                     </div>
-                    {/* Profile Dropdown */}
-                    <div className="relative">
-                        <button onClick={toggleDropdown} className="inline-flex items-center p-2 text-sm font-medium text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg" type="button">
-                            <span className="sr-only">Open user menu</span>
-                            <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 12m-9 0a9 9 0 1 0 18 0 9 9 0 1 0-18 0z" />
-                            </svg>
-                        </button>
-                        {dropdownOpen && (
-                            <div className="z-10 absolute right-0 w-48 mt-2 origin-top-right bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md">
-                                <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
-                                    <li>
-                                        <Link to="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</Link>
-                                    </li>
-                                </ul>
-                            </div>
-                        )}
-                    </div>
-                    {/* Signup Button */}
-                    <Link to="/sign-up" className="ml-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
-                        Sign up
-                    </Link>
+                    {currentUser ? (
+                        <div className="relative">
+                            <button onClick={toggleDropdown} className="inline-flex items-center p-2 text-sm font-medium text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg" type="button">
+                                <span className="sr-only">Open user menu</span>
+                                <Avatar img={currentUser.profilePicture} rounded={true} size="xs" />
+                            </button>
+                            {dropdownOpen && (
+                                <div className="z-10 absolute right-0 w-48 mt-2 origin-top-right bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md">
+                                    <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
+                                        <li className="px-4 py-2 font-bold">{currentUser.username}</li> {/* Displaying the username */}
+                                        <br />
+                                        <hr />
+                                        <li>
+                                            <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</Link>
+                                        </li>
+                                        <li>
+                                            <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <Link to="/sign-in" className="ml-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800">
+                            Sign in
+                        </Link>
+                    )}
                 </div>
                 <div className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${menuOpen ? 'block' : 'hidden'}`} id="navbar-search">
                     <div className="relative mt-3 md:hidden">
                         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                            </svg>
+                            <AiOutlineSearch className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                         </div>
                         <input type="text" id="search-navbar" value={searchTerm} onChange={handleSearchChange} className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..." />
                     </div>
                     <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                         <li>
-                            <Link to="/" className="block py-2 px-3 text-gray-900 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Home</Link>
+                            <Link to="/" className={`block py-2 px-3 text-gray-900 rounded md:bg-transparent ${path === '/' ? 'md:text-blue-700' : 'md:text-gray-900'} md:p-0 md:dark:text-blue-500`} aria-current="page">Home</Link>
                         </li>
                         <li>
                             <Link to="/about" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</Link>
@@ -104,5 +110,5 @@ export default function Header() {
                 </div>
             </div>
         </nav >
-    )
+    );
 }
