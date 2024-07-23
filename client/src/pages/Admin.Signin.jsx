@@ -1,30 +1,27 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
+import { BsBluetooth } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
+// import OAuth from '../components/OAuth';
 
-export default function AdminSignup() {
+export default function AdminSignin() {
     const [formData, setFormData] = useState({});
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
     };
-
-    const handleRoleChange = (e) => {
-        setFormData({ ...formData, role: e.target.value });
-    };
-
+    console.log(formData)
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.username || !formData.email || !formData.password || !formData.role) {
+        if (!formData.email || !formData.password) {
             return setErrorMessage('Please fill out all fields.');
         }
         try {
             setLoading(true);
             setErrorMessage(null);
-            const res = await fetch('/api/auth/signup', {
+            const res = await fetch('/api/auth/signin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -35,14 +32,13 @@ export default function AdminSignup() {
             }
             setLoading(false);
             if (res.ok) {
-                navigate('/admin-signin');
+                navigate('/');
             }
         } catch (error) {
             setErrorMessage(error.message);
             setLoading(false);
         }
     };
-
     return (
         <div className='min-h-screen mt-20'>
             <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
@@ -59,9 +55,10 @@ export default function AdminSignup() {
                     </p>
                 </div>
                 {/* right */}
+
                 <div className='flex-1'>
                     <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-                        <div>
+                        {/* <div>
                             <Label value='Your username' />
                             <TextInput
                                 type='text'
@@ -69,7 +66,7 @@ export default function AdminSignup() {
                                 id='username'
                                 onChange={handleChange}
                             />
-                        </div>
+                        </div> */}
                         <div>
                             <Label value='Your email' />
                             <TextInput
@@ -83,24 +80,13 @@ export default function AdminSignup() {
                             <Label value='Your password' />
                             <TextInput
                                 type='password'
-                                placeholder='Password'
+                                placeholder='******'
                                 id='password'
                                 onChange={handleChange}
                             />
                         </div>
-                        <div>
-                            <Label value='Role' />
-                            <select
-                                id='role'
-                                onChange={handleRoleChange}
-                                value={formData.role || 'user'}
-                                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                            >
-                                <option value='user'>User</option>
-                                <option value='admin'>Admin</option>
-                            </select>
-                        </div>
                         <Button
+                            // gradientDuoTone='purpleToPink'
                             className='bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 text-white'
                             type='submit'
                             disabled={loading}
@@ -111,14 +97,15 @@ export default function AdminSignup() {
                                     <span className='pl-3'>Loading...</span>
                                 </>
                             ) : (
-                                'Sign Up'
+                                'Sign In'
                             )}
                         </Button>
+                        {/* <OAuth /> */}
                     </form>
                     <div className='flex gap-2 text-sm mt-5'>
-                        <span>Have an account?</span>
-                        <Link to='/sign-in' className='text-blue-500'>
-                            Sign In
+                        <span>Don't Have an account?</span>
+                        <Link to='/admin-signup' className='text-blue-500'>
+                            Sign Up
                         </Link>
                     </div>
                     {errorMessage && (

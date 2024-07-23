@@ -1,9 +1,10 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
+import { BsBluetooth } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 // import OAuth from '../components/OAuth';
 
-export default function SignIn() {
+export default function AdminSignin() {
     const [formData, setFormData] = useState({});
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -44,14 +45,13 @@ export default function SignIn() {
                 {/* left */}
                 <div className='flex-1'>
                     <Link to='/' className='font-bold dark:text-white text-4xl'>
-                        <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-                            Sanus's
+                        <span className='px-2 py-1 bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 text-white'>
+                            Sanu's
                         </span>
                         Blog
                     </Link>
                     <p className='text-sm mt-5'>
-                        This is a demo project. You can sign up with your email and password
-                        or with Google.
+                        Manage and publish content efficiently. Your hub for all administrative tasks.
                     </p>
                 </div>
                 {/* right */}
@@ -86,7 +86,8 @@ export default function SignIn() {
                             />
                         </div>
                         <Button
-                            gradientDuoTone='purpleToPink'
+                            // gradientDuoTone='purpleToPink'
+                            className='bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 text-white'
                             type='submit'
                             disabled={loading}
                         >

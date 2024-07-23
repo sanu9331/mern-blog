@@ -9,6 +9,8 @@ import SignUp from './pages/SignUp';
 import Header from './components/Header';
 import 'flowbite/dist/flowbite.css';
 import FooterCom from './components/Footer'
+// import AdminSignin from './pages/Admin.Signin';
+// import AdminSignup from './pages/Admin.Signup';
 
 
 
@@ -25,6 +27,8 @@ export default function App() {
           <Route path='/sign-up' element={<SignUp />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/projects' element={<Projects />} />
+          {/* <Route path='/admin-signin' element={<AdminSignin />} />
+          <Route path='/admin-signup' element={<AdminSignup />} /> */}
         </Routes>
         <FooterCom />
       </BrowserRouter>
