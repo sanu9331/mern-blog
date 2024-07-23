@@ -2,12 +2,21 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
 import { BsBluetooth } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    signInStart,
+    signInSuccess,
+    signInFailure,
+} from '../redux/user/userSlice';
 // import OAuth from '../components/OAuth';
 
 export default function AdminSignin() {
     const [formData, setFormData] = useState({});
-    const [errorMessage, setErrorMessage] = useState(null);
-    const [loading, setLoading] = useState(false);
+    // const [errorMessage, setErrorMessage] = useState(null);
+    // const [loading, setLoading] = useState(false);
+    const { loading, error: errorMessage } = useSelector(state => state.user)
+    const dispatch = useDispatch();
+
     const navigate = useNavigate();
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -16,11 +25,14 @@ export default function AdminSignin() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.email || !formData.password) {
-            return setErrorMessage('Please fill out all fields.');
+            // return setErrorMessage('Please fill out all fields.');
+            return dispatch(signInFailure('please fill out all fields'));
         }
         try {
-            setLoading(true);
-            setErrorMessage(null);
+            // setLoading(true);
+            // setErrorMessage(null);
+            dispatch(signInStart());
+
             const res = await fetch('/api/auth/signin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -28,15 +40,18 @@ export default function AdminSignin() {
             });
             const data = await res.json();
             if (data.success === false) {
-                return setErrorMessage(data.message);
+                // return setErrorMessage(data.message);
+                dispatch(signInFailure(data.message));
             }
-            setLoading(false);
+            // setLoading(false);
             if (res.ok) {
+                dispatch(signInSuccess(data))
                 navigate('/');
             }
         } catch (error) {
-            setErrorMessage(error.message);
-            setLoading(false);
+            // setErrorMessage(error.message);
+            // setLoading(false);
+            dispatch(signInFailure(error.message))
         }
     };
     return (
@@ -51,7 +66,8 @@ export default function AdminSignin() {
                         Blog
                     </Link>
                     <p className='text-sm mt-5'>
-                        Manage and publish content efficiently. Your hub for all administrative tasks.
+                        Explore articles on web development and technology. Join our community today!
+
                     </p>
                 </div>
                 {/* right */}

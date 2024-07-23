@@ -55,7 +55,7 @@ export default function AdminSignup() {
                         Blog
                     </Link>
                     <p className='text-sm mt-5'>
-                        Manage and publish content efficiently. Your hub for all administrative tasks.
+                        Explore articles on web development and technology. Join our community today!
                     </p>
                 </div>
                 {/* right */}
