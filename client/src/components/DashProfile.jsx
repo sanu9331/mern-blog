@@ -19,9 +19,10 @@ import {
     deleteUserFailure, signoutSuccess,
 } from '../redux/user/userSlice';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
 
 export default function DashProfile() {
-    const { currentUser, error } = useSelector((state) => state.user);
+    const { currentUser, error, loading } = useSelector((state) => state.user);
     const [imageFile, setImageFile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     console.log('imagefileurl=', imageFileUrl);
@@ -221,9 +222,28 @@ export default function DashProfile() {
                     defaultValue={currentUser.email} onChange={handleChange}
                 />
                 <TextInput type='password' id='password' placeholder='password' onChange={handleChange} />
-                <Button type='submit' className='bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800' >
+                {/* <Button type='submit' className='bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800' >
                     Update
+                </Button> */}
+                <Button
+                    type='submit'
+                    className='bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800'
+
+                    disabled={loading || imageFileUploading}
+                >
+                    {loading ? 'Loading...' : 'Update'}
                 </Button>
+                {currentUser.role === 'admin' && (
+                    <Link to={'/create-post'}>
+                        <Button
+                            type='button'
+                            gradientDuoTone='purpleToPink'
+                            className='w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-pink-500 hover:to-purple-500'
+                        >
+                            Create a post
+                        </Button>
+                    </Link>
+                )}
             </form>
             <div className="text-red-500 flex justify-between mt-5">
                 {/* <span className='cursor-pointer'>Delete Account</span> */}
@@ -235,22 +255,28 @@ export default function DashProfile() {
                     Sign Out
                 </span>
             </div>
-            {updateUserSuccess && (
-                <Alert color='success' className='mt-5'>
-                    {updateUserSuccess}
-                </Alert>
-            )}
-            {updateUserError && (
-                <Alert color='failure' className='mt-5'>
-                    {updateUserError}
-                </Alert>
-            )}
+            {
+                updateUserSuccess && (
+                    <Alert color='success' className='mt-5'>
+                        {updateUserSuccess}
+                    </Alert>
+                )
+            }
+            {
+                updateUserError && (
+                    <Alert color='failure' className='mt-5'>
+                        {updateUserError}
+                    </Alert>
+                )
+            }
 
-            {error && (
-                <Alert color='failure' className='mt-5'>
-                    {error}
-                </Alert>
-            )}
+            {
+                error && (
+                    <Alert color='failure' className='mt-5'>
+                        {error}
+                    </Alert>
+                )
+            }
 
             {/* model */}
             <Modal show={showModal} size="md" onClose={() => setShowModal(false)} popup className="bg-opacity-40">

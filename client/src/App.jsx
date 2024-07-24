@@ -10,6 +10,8 @@ import Header from './components/Header';
 import 'flowbite/dist/flowbite.css';
 import FooterCom from './components/Footer'
 import PrivateRoute from './components/PrivateRoute';
+import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
+import CreatePost from './pages/CreatePost';
 // import AdminSignin from './pages/Admin.Signin';
 // import AdminSignup from './pages/Admin.Signup';
 
@@ -29,6 +31,9 @@ export default function App() {
 
           <Route element={<PrivateRoute />}>
             <Route path='/dashboard' element={<Dashboard />} />
+          </Route>
+          <Route element={<OnlyAdminPrivateRoute />}>
+            <Route path='/create-post' element={<CreatePost />} />
           </Route>
 
           <Route path='/projects' element={<Projects />} />
