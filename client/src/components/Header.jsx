@@ -4,9 +4,11 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { signoutSuccess } from '../redux/user/userSlice';
 
 export default function Header() {
     const path = useLocation().pathname;
+    const dispatch = useDispatch();
     const { currentUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
 
@@ -31,10 +33,22 @@ export default function Header() {
         setMenuOpen(!menuOpen);
     };
 
-    const handleSignOut = () => {
-        // Handle sign out logic
-        // dispatch(signOutAction());
-        navigate('/sign-in');
+
+
+    const handleSignout = async () => {
+        try {
+            const res = await fetch('/api/user/signout', {
+                method: 'POST',
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                console.log(data.message);
+            } else {
+                dispatch(signoutSuccess());
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
     };
 
     return (
@@ -77,7 +91,7 @@ export default function Header() {
                                             <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</Link>
                                         </li>
                                         <li>
-                                            <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</button>
+                                            <button onClick={handleSignout} className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</button>
                                         </li>
                                     </ul>
                                 </div>
