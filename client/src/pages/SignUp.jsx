@@ -18,7 +18,7 @@ export default function AdminSignup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.username || !formData.email || !formData.password || !formData.role) {
+        if (!formData.username || !formData.email || !formData.password) {
             return setErrorMessage('Please fill out all fields.');
         }
         try {
@@ -35,7 +35,7 @@ export default function AdminSignup() {
             }
             setLoading(false);
             if (res.ok) {
-                navigate('/admin-signin');
+                navigate('/sign-in');
             }
         } catch (error) {
             setErrorMessage(error.message);
