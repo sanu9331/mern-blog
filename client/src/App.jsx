@@ -13,6 +13,7 @@ import PrivateRoute from './components/PrivateRoute';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
 import CreatePost from './pages/CreatePost';
 import UpdatePost from './pages/UpdatePost';
+import PostPage from './pages/PostPage';
 // import AdminSignin from './pages/Admin.Signin';
 // import AdminSignup from './pages/Admin.Signup';
 
@@ -39,6 +40,7 @@ export default function App() {
           </Route>
 
           <Route path='/projects' element={<Projects />} />
+          <Route path='/post/:postSlug' element={<PostPage />} />
           {/* <Route path='/admin-signin' element={<AdminSignin />} />
           <Route path='/admin-signup' element={<AdminSignup />} /> */}
         </Routes>
