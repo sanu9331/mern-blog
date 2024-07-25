@@ -2,20 +2,31 @@ import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
-import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { signoutSuccess } from '../redux/user/userSlice';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
     const path = useLocation().pathname;
+    const location = useLocation();
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
 
-    const [searchTerm, setSearchTerm] = useState('');
+
     const [theme, setTheme] = useState('light'); // Adjust as per your theme logic
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu
+
+    const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const searchTermFromUrl = urlParams.get('searchTerm');
+        if (searchTermFromUrl) {
+            setSearchTerm(searchTermFromUrl);
+        }
+    }, [location.search]);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -51,6 +62,14 @@ export default function Header() {
         }
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('searchTerm', searchTerm);
+        const searchQuery = urlParams.toString();
+        navigate(`/search?${searchQuery}`);
+    };
+
     return (
         <nav className="bg-white border-gray-200 dark:bg-gray-900 border-b-2 border-gray-200 dark:border-gray-700 ">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -66,11 +85,21 @@ export default function Header() {
                         <span className="sr-only">Search</span>
                     </button>
                     <div className="relative hidden md:block me-4">
-                        <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        {/* <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <AiOutlineSearch className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                             <span className="sr-only">Search icon</span>
                         </div>
-                        <input type="text" id="search-navbar" value={searchTerm} onChange={handleSearchChange} className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..." />
+                        <input type="text" id="search-navbar" value={searchTerm} onChange={handleSearchChange} className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..." /> */}
+                        <form onSubmit={handleSubmit}> {/* Start of the change */}
+                            <TextInput
+                                type='text'
+                                placeholder='Search...'
+                                rightIcon={AiOutlineSearch}
+                                className='hidden lg:inline'
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </form> {/* End of the change */}
                     </div>
                     {currentUser ? (
                         <div className="relative">
