@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.route.js'
 import adminRoutes from './routes/admin.route.js'
 import cookieParser from 'cookie-parser';
 import postRoutes from './routes/post.route.js';
+import path from 'path';
 
 const mongoURI = process.env.MONGO
 
@@ -15,6 +16,8 @@ mongoose.connect(mongoURI).then(() => {
 }).catch((err) => {
     console.log(err);
 })
+
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -29,6 +32,12 @@ app.use('/api/user', userRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/post', postRoutes);
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
