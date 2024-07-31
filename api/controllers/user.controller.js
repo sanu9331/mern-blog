@@ -12,15 +12,15 @@ export const updateUser = async (req, res, next) => {
         return next(errorHandler(403, 'You are not allowed to update this user'));
     }
     if (req.body.password) {
-        if (req.body.password.length < 6) {
-            return next(errorHandler(400, 'Password must be at least 6 characters'));
+        if (req.body.password.length < 4) {
+            return next(errorHandler(400, 'Password must be at least 4 characters'));
         }
         req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
     if (req.body.username) {
-        if (req.body.username.length < 7 || req.body.username.length > 20) {
+        if (req.body.username.length < 4 || req.body.username.length > 20) {
             return next(
-                errorHandler(400, 'Username must be between 7 and 20 characters')
+                errorHandler(400, 'Username must be between 4 and 20 characters')
             );
         }
         if (req.body.username.includes(' ')) {
@@ -34,6 +34,16 @@ export const updateUser = async (req, res, next) => {
                 errorHandler(400, 'Username can only contain letters and numbers')
             );
         }
+    }
+    if (req.body.email) {
+        if (!req.body.email.includes('@') || req.body.email.includes(' ')) {
+            return next(errorHandler(400, 'Email must be valid'));
+        }
+        if (!req.body.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            return next(errorHandler(400, 'Email must be valid'));
+        }
+    } else {
+        return next(errorHandler(400, 'Email cannot be empty'));
     }
     try {
         const updatedUser = await User.findByIdAndUpdate(
@@ -117,5 +127,21 @@ export const getUsers = async (req, res, next) => {
         });
     } catch (error) {
         next(error);
+    }
+};
+
+export const searchUser = async (req, res) => {
+    try {
+        const query = req.query.query;
+        const users = await User.find({
+            $or: [
+                { username: { $regex: query, $options: 'i' } },
+                { email: { $regex: query, $options: 'i' } },
+            ],
+        });
+        res.json({ users });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: 'Internal server error' });
     }
 };

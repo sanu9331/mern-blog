@@ -1,4 +1,4 @@
-import { Modal, Table, Button } from 'flowbite-react';
+import { Modal, Table, Button, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
@@ -10,6 +10,7 @@ export default function DashUsers() {
     const [showMore, setShowMore] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [userIdToDelete, setUserIdToDelete] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -64,10 +65,39 @@ export default function DashUsers() {
         }
     };
 
+    const handleSearch = async () => {
+        try {
+            const res = await fetch(`/api/user/search?query=${searchQuery}`);
+            const data = await res.json();
+            if (res.ok) {
+                setUsers(data.users);
+                setShowMore(false);
+            } else {
+                console.log(data.message);
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
     return (
         <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
             {currentUser.role === 'admin' && users.length > 0 ? (
                 <>
+                    <div className='flex justify-between mb-4'>
+                        <div className='flex flex-col md:flex-row'>
+                            <TextInput
+                                type='text'
+                                placeholder='Search users...'
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className='w-full md:w-3/4'
+                            />
+                            <Button color="blue" onClick={handleSearch} className='ml-2 md:ml-0 md:mt-0 mt-2 hover:bg-gradient-to-r hover:from-blue-500'>
+                                Search
+                            </Button>
+                        </div>
+                    </div>
                     <Table hoverable className='shadow-md'>
                         <Table.Head>
                             <Table.HeadCell>Date created</Table.HeadCell>
