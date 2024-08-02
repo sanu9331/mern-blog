@@ -43,7 +43,7 @@ export default function DashSidebar() {
                         <Sidebar.Item
                             active={tab === 'profile'}
                             icon={HiUser}
-                            label={currentUser.role === 'admin' ? 'Admin' : 'User'}
+                            label={currentUser.role === 'admin' ? <p className="text-white">Admin</p> : <p className="text-white">User</p>}
                             labelColor='dark'
                         >
                             Profile
@@ -81,6 +81,6 @@ export default function DashSidebar() {
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>
             </Sidebar.Items>
-        </Sidebar>
+        </Sidebar >
     );
 }

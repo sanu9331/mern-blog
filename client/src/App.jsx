@@ -17,11 +17,15 @@ import PostPage from './pages/PostPage';
 import Search from './pages/Search';
 // import AdminSignin from './pages/Admin.Signin';
 // import AdminSignup from './pages/Admin.Signup';
+import { useSelector } from 'react-redux'
+import { Navigate, Outlet } from 'react-router-dom'
+
 
 
 
 
 export default function App() {
+  const { currentUser } = useSelector((state) => state.user);
   return (
     <div>
       <BrowserRouter>
@@ -29,8 +33,10 @@ export default function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
-          <Route path='/sign-in' element={<SignIn />} />
-          <Route path='/sign-up' element={<SignUp />} />
+          {/* <Route path='/sign-in' element={<SignIn />} />
+          <Route path='/sign-up' element={<SignUp />} /> */}
+          <Route path='/sign-in' element={currentUser ? <Navigate to="/" /> : <SignIn />} />
+          <Route path='/sign-up' element={currentUser ? <Navigate to="/" /> : <SignUp />} />
           <Route path='/search' element={<Search />} />
 
           <Route element={<PrivateRoute />}>

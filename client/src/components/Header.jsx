@@ -116,9 +116,9 @@ export default function Header() {
                                         <li>
                                             <Link to="/dashboard?tab=profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</Link>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                             <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</Link>
-                                        </li>
+                                        </li> */}
                                         <li>
                                             <button onClick={handleSignout} className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</button>
                                         </li>
